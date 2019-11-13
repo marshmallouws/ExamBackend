@@ -1,6 +1,4 @@
 package utils;
-
-
 import entities.Role;
 import entities.User;
 
