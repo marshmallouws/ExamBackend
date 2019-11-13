@@ -51,7 +51,7 @@ public class User implements Serializable {
 
   //TODO Change when password is hashed
    public boolean verifyPassword(String pw){
-        return(BCrypt.checkpw(pw, getUserPass()));
+        return(BCrypt.checkpw(pw, userPass));
     }
 
   public User(String userName, String userPass) {
