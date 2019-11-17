@@ -8,6 +8,6 @@
 ## Travis CI
 - Find project on Travis.org and make sure CI has been enabled
 - Create two Environment Variables with names and values as sketched below (must be done in two steps):
--- REMOTE_PW : Value for script_user
--- REMOTE_USER : script_user
+  * REMOTE_PW : Value for script_user
+  * REMOTE_USER : script_user
 - If build passes, push to github and see the Travis build and deploy project
