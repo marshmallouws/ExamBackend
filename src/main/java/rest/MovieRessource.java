@@ -6,6 +6,7 @@ import errorhandling.GenericExceptionMapper;
 import errorhandling.NotFoundException;
 import facades.MovieApiFacade;
 import javax.annotation.security.RolesAllowed;
+import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -15,12 +16,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import utils.EMF_Creator;
 
 //Todo Remove or change relevant parts before ACTUAL use
 @Path("movies")
 public class MovieRessource {
+    private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final MovieApiFacade FACADE = MovieApiFacade.getMovieApiFacade();
+    private static final MovieApiFacade FACADE = MovieApiFacade.getMovieApiFacade(EMF);
     
     @Context
     private UriInfo context;
@@ -54,7 +57,7 @@ public class MovieRessource {
     @RolesAllowed("user")
     public Response getAll(@PathParam("title") String title) {
         try {
-            return Response.ok(FACADE.getMoviesAll(title)).build();
+            return Response.ok(FACADE.getMoviesAll(title, "user")).build();
         } catch (InterruptedException ex) {
             return new GenericExceptionMapper().toResponse(ex);
         } catch (NotFoundException e) {
