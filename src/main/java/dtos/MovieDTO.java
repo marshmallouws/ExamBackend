@@ -6,6 +6,7 @@
 package dtos;
 
 import entities.Movie;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,17 @@ public class MovieDTO {
         this.directors = m.getDirectors();
         this.genres = m.getGenre();
         this.poster = m.getPoster();
+        this.imdb = new ImdbScoreDTO(m.getImdbRating(), m.getImdbVotes());
+        Map<String, Double> viewer = m.getTomatoViewers();
+        Map<String, Double> critics = m.getTomatoViewers();
+        this.tomato = new TomatoScoreDTO(viewer, critics);
+        
+//        if(m.getTomato().get(0).getType() == "critic") {
+//            critic.put("rating", m.get)
+//        }
+//        
+//        critic.put("rating", )
+//        
     }
 
 //    public MovieDTO(String title, int year, String plot, String directors, 

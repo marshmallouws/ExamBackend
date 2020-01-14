@@ -69,6 +69,7 @@ public class MovieApiFacade {
     }
 
     public MovieDTO getMoviesSimple(String moviename) throws InterruptedException, NotFoundException {
+        moviename = moviename.replace(" ", "%20");
         String[] endpoints = {"movieInfo", "moviePoster"};
         List<Future<String>> futures = submitTasks(moviename, endpoints);
         MovieDTO m = new MovieDTO();
@@ -96,10 +97,11 @@ public class MovieApiFacade {
         MovieDTO dbDTO = movieDBFacade.findMovie(moviename);
         
         if(dbDTO != null) {
-            movieDBFacade.saveRequest(username, dbDTO);
+            movieDBFacade.saveRequest(username, dbDTO, null);
             return dbDTO;
         }
         
+        moviename = moviename.replace(" ", "%20");
         List<Future<String>> futures = submitTasks(moviename, endpoints);
         MovieDTO m = new MovieDTO();
         ImdbScoreDTO i = null;
@@ -134,7 +136,7 @@ public class MovieApiFacade {
             throw new NotFoundException(moviename + " is not found");
         }
         
-        movieDBFacade.saveRequest(username, m);
+        movieDBFacade.saveRequest(username, m, t);
         return m;
     }
 
@@ -168,7 +170,7 @@ public class MovieApiFacade {
     public static void main(String[] args) throws InterruptedException, NotFoundException {
         EntityManagerFactory emf2 = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
         String[] s = {"movieInfo", "moviePoster", "imdbScore", "tomatoesScore", "metacriticScore"};
-        MovieDTO m = MovieApiFacade.getMovieApiFacade(emf2).getMoviesAll("Grease", "user");
+        MovieDTO m = MovieApiFacade.getMovieApiFacade(emf2).getMoviesAll("Cronos", "user");
 
         System.out.println(m.getPoster());
         System.out.println(m.getTitle());
@@ -177,6 +179,8 @@ public class MovieApiFacade {
         System.out.println(m.getDirectors());
         System.out.println(m.getCast());
         System.out.println(m.getImdb());
+        System.out.println(m.getTomato().getCritic().containsKey("rating"));
+        System.out.println(m.getTomato().getViewer().containsKey("rating"));
         //System.out.println(m.getImdb().getImdbVotes());
        // System.out.println(m.getTomato().getCritic().containsKey("rating"));
         //System.out.println(m.getTomato().getCritic().get("rating"));

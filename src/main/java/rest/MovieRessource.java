@@ -21,22 +21,23 @@ import utils.EMF_Creator;
 //Todo Remove or change relevant parts before ACTUAL use
 @Path("movies")
 public class MovieRessource {
+
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final MovieApiFacade FACADE = MovieApiFacade.getMovieApiFacade(EMF);
-    
+
     @Context
     private UriInfo context;
 
     @Context
     SecurityContext securityContext;
-            
+
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String demo() {
         return "{\"msg\":\"Hello World..\"}";
     }
-    
+
     @Path("/movie-info-simple/{title}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -50,14 +51,15 @@ public class MovieRessource {
             return new GenericExceptionMapper().toResponse(e);
         }
     }
-    
-    @Path("/movie-info-all/{title}") 
+
+    @Path("/movie-info-all/{title}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("user")
     public Response getAll(@PathParam("title") String title) {
+        String thisuser = securityContext.getUserPrincipal().getName();
         try {
-            return Response.ok(FACADE.getMoviesAll(title, "user")).build();
+            return Response.ok(GSON.toJson(FACADE.getMoviesAll(title, "user"))).build();
         } catch (InterruptedException ex) {
             return new GenericExceptionMapper().toResponse(ex);
         } catch (NotFoundException e) {

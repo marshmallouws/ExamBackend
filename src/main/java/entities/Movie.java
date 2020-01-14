@@ -6,18 +6,29 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  *
  * @author Annika
  */
 @Entity
+@Table(name = "movie")
 public class Movie implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,11 +42,27 @@ public class Movie implements Serializable {
     private String genre;
     private String movieCast;
     private String poster;
-    
+    private double imdbRating;
+    private int imdbVotes;
+
+    @ElementCollection
+    @MapKeyColumn(name = "name")
+    @Column(name = "value")
+    @CollectionTable(name = "tomato_critics", joinColumns = @JoinColumn(name = "movie_id"))
+    private Map<String, Double> tomatoCritics = new HashMap();
+
+    @ElementCollection
+    @MapKeyColumn(name = "name")
+    @Column(name = "value")
+    @CollectionTable(name = "tomato_viewers", joinColumns = @JoinColumn(name = "movie_id"))
+    private Map<String, Double> tomatoViewers = new HashMap();
+
+
     @OneToMany(mappedBy = "movie")
     private List<Request> requests;
-    
-    public Movie() {}
+
+    public Movie() {
+    }
     
     public Movie(String title, int year, String plot, String directors, 
             String genre, String cast, String poster) {
@@ -46,6 +73,22 @@ public class Movie implements Serializable {
         this.genre = genre;
         this.movieCast = cast;
         this.poster = poster;
+    }
+
+    public Movie(String title, int year, String plot, String directors,
+            String genre, String cast, String poster, Map<String, Double> critics, 
+            Map<String, Double> viewers, int imdbVotes, double imdbRating) {
+        this.title = title;
+        this.releaseYear = year;
+        this.plot = plot;
+        this.directors = directors;
+        this.genre = genre;
+        this.movieCast = cast;
+        this.poster = poster;
+        this.tomatoCritics = critics;
+        this.tomatoViewers = viewers;
+        this.imdbRating = imdbRating;
+        this.imdbVotes = imdbVotes;
     }
 
     public String getTitle() {
@@ -118,5 +161,37 @@ public class Movie implements Serializable {
 
     public void setRequests(List<Request> requests) {
         this.requests = requests;
+    }
+
+    public double getImdbRating() {
+        return imdbRating;
+    }
+
+    public void setImdbRating(double imdbRating) {
+        this.imdbRating = imdbRating;
+    }
+
+    public int getImdbVotes() {
+        return imdbVotes;
+    }
+
+    public void setImdbVotes(int imdbVotes) {
+        this.imdbVotes = imdbVotes;
+    }
+
+    public Map<String, Double> getTomatoCritics() {
+        return tomatoCritics;
+    }
+
+    public void setTomatoCritics(Map<String, Double> tomatoCritics) {
+        this.tomatoCritics = tomatoCritics;
+    }
+
+    public Map<String, Double> getTomatoViewers() {
+        return tomatoViewers;
+    }
+
+    public void setTomatoViewers(Map<String, Double> tomatoViewers) {
+        this.tomatoViewers = tomatoViewers;
     }
 }

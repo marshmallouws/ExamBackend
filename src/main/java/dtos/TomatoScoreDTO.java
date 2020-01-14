@@ -12,18 +12,14 @@ import java.util.Map;
  * @author Annika
  */
 public class TomatoScoreDTO {
-    private String source;
     private Map<String, Double> viewer;
     private Map<String, Double> critic;
     
     public TomatoScoreDTO() {}
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
+    
+    public TomatoScoreDTO(Map<String, Double> viewer, Map<String, Double> critic) {
+        this.viewer = viewer;
+        this.critic = critic;
     }
 
     public Map<String, Double> getViewer() {

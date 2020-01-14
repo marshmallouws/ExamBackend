@@ -94,6 +94,5 @@ public class LoginEndpoint {
     SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
     signedJWT.sign(signer);
     return signedJWT.serialize();
-
   }
 }

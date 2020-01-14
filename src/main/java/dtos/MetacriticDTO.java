@@ -12,12 +12,12 @@ package dtos;
 public class MetacriticDTO {
     
     private String source;
-    private String metacritic;
+    private double metacritic;
     
     public MetacriticDTO() {
     }
     
-    public MetacriticDTO(String source, String metacritic) {
+    public MetacriticDTO(String source, double metacritic) {
         this.source = source;
         this.metacritic = metacritic;
     }
@@ -30,11 +30,11 @@ public class MetacriticDTO {
         this.source = source;
     }
 
-    public String getMetacritic() {
+    public double getMetacritic() {
         return metacritic;
     }
 
-    public void setMetacritic(String metacritic) {
+    public void setMetacritic(double metacritic) {
         this.metacritic = metacritic;
     }
 }
