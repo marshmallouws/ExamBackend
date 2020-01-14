@@ -13,6 +13,7 @@ import dtos.ImdbScoreDTO;
 import dtos.MetacriticDTO;
 import dtos.MovieDTO;
 import dtos.TomatoScoreDTO;
+import errorhandling.NotFoundException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class MovieApiFacade {
         return futures;
     }
 
-    public MovieDTO getMoviesSimple(String moviename) throws InterruptedException {
+    public MovieDTO getMoviesSimple(String moviename) throws InterruptedException, NotFoundException {
         String[] endpoints = {"movieInfo", "moviePoster"};
         List<Future<String>> futures = submitTasks(moviename, endpoints);
         MovieDTO m = new MovieDTO();
@@ -78,10 +79,14 @@ public class MovieApiFacade {
             //Throw custom exception
         }
 
+        if (m.getTitle() == null) {
+            throw new NotFoundException(moviename + " is not found");
+        }
+
         return m;
     }
 
-    public MovieDTO getMoviesAll(String moviename) throws InterruptedException {
+    public MovieDTO getMoviesAll(String moviename) throws InterruptedException, NotFoundException {
         String[] endpoints = {"movieInfo", "moviePoster", "imdbScore",
             "tomatoesScore", "metacriticScore"};
         List<Future<String>> futures = submitTasks(moviename, endpoints);
@@ -113,6 +118,10 @@ public class MovieApiFacade {
         } catch (ExecutionException e) {
             //Throw custom exception
         }
+
+        if (m.getTitle() == null) {
+            throw new NotFoundException(moviename + " is not found");
+        }
         return m;
     }
 
@@ -143,7 +152,7 @@ public class MovieApiFacade {
 
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, NotFoundException {
         String[] s = {"movieInfo", "moviePoster", "imdbScore", "tomatoesScore", "metacriticScore"};
         MovieDTO m = MovieApiFacade.getMovieApiFacade().getMoviesAll("Grease");
 

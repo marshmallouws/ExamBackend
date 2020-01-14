@@ -3,6 +3,7 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import errorhandling.GenericExceptionMapper;
+import errorhandling.NotFoundException;
 import utils.EMF_Creator;
 import facades.FacadeExample;
 import facades.MovieApiFacade;
@@ -37,6 +38,8 @@ public class MovieRessource {
         } catch (InterruptedException ex) {
             // TODO catch InterruptedException in facade and throw a custom exception
             return new GenericExceptionMapper().toResponse(ex);
+        } catch (NotFoundException e) {
+            return new GenericExceptionMapper().toResponse(e);
         }
     }
     
@@ -48,6 +51,8 @@ public class MovieRessource {
             return Response.ok(FACADE.getMoviesAll(title)).build();
         } catch (InterruptedException ex) {
             return new GenericExceptionMapper().toResponse(ex);
+        } catch (NotFoundException e) {
+            return new GenericExceptionMapper().toResponse(e);
         }
     }
 }
