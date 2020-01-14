@@ -29,6 +29,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
+import utils.EMF_Creator;
 
 /**
  *
@@ -37,16 +38,18 @@ import javax.persistence.EntityManagerFactory;
 public class MovieApiFacade {
 
     private static MovieApiFacade instance;
-    //private static EntityManagerFactory emf;
+    private static EntityManagerFactory emf;
+    private static MovieDBFacade movieDBFacade;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private MovieApiFacade() {
     }
 
-    public static MovieApiFacade getMovieApiFacade(/*EntityManagerFactory _emf*/) {
+    public static MovieApiFacade getMovieApiFacade(EntityManagerFactory _emf) {
         if (instance == null) {
-            // emf = _emf;
+            emf = _emf;
             instance = new MovieApiFacade();
+            movieDBFacade = MovieDBFacade.getMovieDBFacade(emf);
         }
         return instance;
     }
@@ -86,9 +89,17 @@ public class MovieApiFacade {
         return m;
     }
 
-    public MovieDTO getMoviesAll(String moviename) throws InterruptedException, NotFoundException {
+    public MovieDTO getMoviesAll(String moviename, String username) throws InterruptedException, NotFoundException {
         String[] endpoints = {"movieInfo", "moviePoster", "imdbScore",
             "tomatoesScore", "metacriticScore"};
+        
+        MovieDTO dbDTO = movieDBFacade.findMovie(moviename);
+        
+        if(dbDTO != null) {
+            movieDBFacade.saveRequest(username, dbDTO);
+            return dbDTO;
+        }
+        
         List<Future<String>> futures = submitTasks(moviename, endpoints);
         MovieDTO m = new MovieDTO();
         ImdbScoreDTO i = null;
@@ -122,6 +133,8 @@ public class MovieApiFacade {
         if (m.getTitle() == null) {
             throw new NotFoundException(moviename + " is not found");
         }
+        
+        movieDBFacade.saveRequest(username, m);
         return m;
     }
 
@@ -153,8 +166,9 @@ public class MovieApiFacade {
     }
 
     public static void main(String[] args) throws InterruptedException, NotFoundException {
+        EntityManagerFactory emf2 = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
         String[] s = {"movieInfo", "moviePoster", "imdbScore", "tomatoesScore", "metacriticScore"};
-        MovieDTO m = MovieApiFacade.getMovieApiFacade().getMoviesAll("Grease");
+        MovieDTO m = MovieApiFacade.getMovieApiFacade(emf2).getMoviesAll("Grease", "user");
 
         System.out.println(m.getPoster());
         System.out.println(m.getTitle());
@@ -163,11 +177,11 @@ public class MovieApiFacade {
         System.out.println(m.getDirectors());
         System.out.println(m.getCast());
         System.out.println(m.getImdb());
-        System.out.println(m.getImdb().getImdbVotes());
-        System.out.println(m.getTomato().getCritic().containsKey("rating"));
-        System.out.println(m.getTomato().getCritic().get("rating"));
-        System.out.println(m.getTomato().getCritic().get("numReviews"));
-        System.out.println(m.getTomato().getViewer().get("meter"));
+        //System.out.println(m.getImdb().getImdbVotes());
+       // System.out.println(m.getTomato().getCritic().containsKey("rating"));
+        //System.out.println(m.getTomato().getCritic().get("rating"));
+        //System.out.println(m.getTomato().getCritic().get("numReviews"));
+        //System.out.println(m.getTomato().getViewer().get("meter"));
 //        System.out.println(m.getMetacritic().getMetacritic());
     }
 }

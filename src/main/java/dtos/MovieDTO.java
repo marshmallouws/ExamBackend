@@ -5,6 +5,7 @@
  */
 package dtos;
 
+import entities.Movie;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,15 @@ public class MovieDTO {
 //    private MetacriticDTO metacritic;
 
     public MovieDTO() {
+    }
+    
+    public MovieDTO(Movie m) {
+        this.title = m.getTitle();
+        this.year = m.getReleaseYear();
+        this.plot = m.getPlot();
+        this.directors = m.getDirectors();
+        this.genres = m.getGenre();
+        this.poster = m.getPoster();
     }
 
 //    public MovieDTO(String title, int year, String plot, String directors, 
