@@ -20,6 +20,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -29,6 +30,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "movie")
+@NamedQuery(name = "Movie.DeleteAllRows", query = "DELETE FROM Movie")
 public class Movie implements Serializable {
 
     private static final long serialVersionUID = 1L;

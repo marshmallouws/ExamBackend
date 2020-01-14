@@ -12,11 +12,13 @@ import java.util.Map;
  * @author Annika
  */
 public class TomatoScoreDTO {
+
     private Map<String, Double> viewer;
     private Map<String, Double> critic;
-    
-    public TomatoScoreDTO() {}
-    
+
+    public TomatoScoreDTO() {
+    }
+
     public TomatoScoreDTO(Map<String, Double> viewer, Map<String, Double> critic) {
         this.viewer = viewer;
         this.critic = critic;
@@ -36,5 +38,18 @@ public class TomatoScoreDTO {
 
     public void setCritic(Map<String, Double> critic) {
         this.critic = critic;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        
+        TomatoScoreDTO dto = (TomatoScoreDTO) o;
+        return viewer.equals(dto.getViewer()) && critic.equals(dto.getCritic());
     }
 }

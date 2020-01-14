@@ -29,40 +29,21 @@ public class MovieDTO {
 
     public MovieDTO() {
     }
-    
+
     public MovieDTO(Movie m) {
         this.title = m.getTitle();
         this.year = m.getReleaseYear();
         this.plot = m.getPlot();
+        this.cast = m.getMovieCast();
         this.directors = m.getDirectors();
         this.genres = m.getGenre();
         this.poster = m.getPoster();
         this.imdb = new ImdbScoreDTO(m.getImdbRating(), m.getImdbVotes());
         Map<String, Double> viewer = m.getTomatoViewers();
-        Map<String, Double> critics = m.getTomatoViewers();
+        Map<String, Double> critics = m.getTomatoCritics();
         this.tomato = new TomatoScoreDTO(viewer, critics);
-        
-//        if(m.getTomato().get(0).getType() == "critic") {
-//            critic.put("rating", m.get)
-//        }
-//        
-//        critic.put("rating", )
-//        
     }
 
-//    public MovieDTO(String title, int year, String plot, String directors, 
-//            String genres, String cast, String poster, ImdbScoreDTO imdb) {
-//        this.title = title;
-//        this.year = year;
-//        this.plot = plot;
-//        this.directors = directors;
-//        this.genres = genres;
-//        this.cast = cast;
-//        this.poster = poster;
-//        this.imdb = imdb;
-////        this.imdbScore = imdbScore;
-////        this.source = source;
-//    }
     public String getTitle() {
         return title;
     }
@@ -135,15 +116,6 @@ public class MovieDTO {
         this.tomato = tomato;
     }
 
-//    public MetacriticDTO getMetacritic() {
-//        return metacritic;
-//    }
-//
-//    public void setMetacritic(MetacriticDTO metacritic) {
-//
-//        this.metacritic = metacritic;
-//    }
-
     public void merge(MovieDTO other) {
         this.title = other.title == null ? this.title : other.title;
         this.year = other.year == 0 ? this.year : other.year;
@@ -156,4 +128,25 @@ public class MovieDTO {
         this.tomato = other.tomato == null ? this.tomato : other.tomato;
 //        this.metacritic = other.metacritic == null ? this.metacritic : other.metacritic;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MovieDTO dto = (MovieDTO) o;
+        return title.equals(dto.getTitle()) 
+                && year == dto.getYear()
+                && plot.equals(dto.getPlot())
+                && directors.equals(dto.getDirectors())
+                && genres.equals(dto.getGenres())
+                && cast.equals(dto.getCast())
+                && poster.equals(dto.getPoster())
+                && imdb.equals(dto.getImdb())
+                && tomato.equals(dto.getTomato());
+    }
+
 }

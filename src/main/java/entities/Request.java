@@ -40,7 +40,7 @@ public class Request implements Serializable {
     private Movie movie;
     
     @ManyToOne(
-        cascade = CascadeType.ALL
+            cascade = CascadeType.ALL
     )
     private User user;
     

@@ -38,4 +38,17 @@ public class ImdbScoreDTO {
         this.imdbVotes = imdbVotes;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ImdbScoreDTO i = (ImdbScoreDTO) o;
+        return imdbRating == i.getImdbRating() && imdbVotes == i.getImdbVotes();
+    }
+
 }
