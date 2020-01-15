@@ -166,26 +166,4 @@ public class MovieApiFacade {
         }
 
     }
-
-    public static void main(String[] args) throws InterruptedException, NotFoundException {
-        EntityManagerFactory emf2 = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
-        String[] s = {"movieInfo", "moviePoster", "imdbScore", "tomatoesScore", "metacriticScore"};
-        MovieDTO m = MovieApiFacade.getMovieApiFacade(emf2).getMoviesAll("Cronos", "user");
-
-        System.out.println(m.getPoster());
-        System.out.println(m.getTitle());
-        System.out.println(m.getYear());
-        System.out.println(m.getPlot());
-        System.out.println(m.getDirectors());
-        System.out.println(m.getCast());
-        System.out.println(m.getImdb());
-        System.out.println(m.getTomato().getCritic().containsKey("rating"));
-        System.out.println(m.getTomato().getViewer().containsKey("rating"));
-        //System.out.println(m.getImdb().getImdbVotes());
-       // System.out.println(m.getTomato().getCritic().containsKey("rating"));
-        //System.out.println(m.getTomato().getCritic().get("rating"));
-        //System.out.println(m.getTomato().getCritic().get("numReviews"));
-        //System.out.println(m.getTomato().getViewer().get("meter"));
-//        System.out.println(m.getMetacritic().getMetacritic());
-    }
 }
