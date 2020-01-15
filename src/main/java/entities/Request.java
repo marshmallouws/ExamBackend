@@ -35,7 +35,7 @@ public class Request implements Serializable {
 
     
     @ManyToOne(
-        cascade = CascadeType.ALL
+        cascade = CascadeType.MERGE
     )
     private Movie movie;
     

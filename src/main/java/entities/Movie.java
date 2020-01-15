@@ -60,7 +60,7 @@ public class Movie implements Serializable {
     private Map<String, Double> tomatoViewers = new HashMap();
 
 
-    @OneToMany(mappedBy = "movie")
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.MERGE)
     private List<Request> requests;
 
     public Movie() {

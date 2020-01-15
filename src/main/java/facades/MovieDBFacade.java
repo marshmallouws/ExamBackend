@@ -10,6 +10,7 @@ import dtos.TomatoScoreDTO;
 import entities.Movie;
 import entities.Request;
 import entities.User;
+import java.awt.BorderLayout;
 import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -46,25 +47,33 @@ public class MovieDBFacade {
         User user = user = em.find(User.class, username); // Null if not exists
         Movie movie = null;
 
-        double imdbRating = m.getImdb().getImdbRating();
-        int imdbVotes = m.getImdb().getImdbVotes();
+        //Used to merge movies so that there won't be duplicates in db
+        try {
+            TypedQuery<Movie> tq
+                    = em.createQuery("SELECT m FROM Movie m WHERE m.title = :title", Movie.class);
+            tq.setParameter("title", m.getTitle());
+            movie = tq.getSingleResult();
+        } catch (NoResultException e) {
+            double imdbRating = m.getImdb().getImdbRating();
+            int imdbVotes = m.getImdb().getImdbVotes();
 
-        // Manually adding to a new Map or else it will throw an exception
-        Map<String, Double> tViewers = m.getTomato().getViewer();
-        Map<String, Double> viewers = new HashMap();
-        tViewers.forEach((k, v) -> {
-            viewers.put(k, v);
-        });
+            // Manually adding to a new Map or else it will throw an exception
+            Map<String, Double> tViewers = m.getTomato().getViewer();
+            Map<String, Double> viewers = new HashMap();
+            tViewers.forEach((k, v) -> {
+                viewers.put(k, v);
+            });
 
-        // Manually adding to a new Map or else it will throw an exception
-        Map<String, Double> tCritics = m.getTomato().getCritic();
-        Map<String, Double> critics = new HashMap();
-        tCritics.forEach((k, v) -> {
-            critics.put(k, v);
-        });
+            // Manually adding to a new Map or else it will throw an exception
+            Map<String, Double> tCritics = m.getTomato().getCritic();
+            Map<String, Double> critics = new HashMap();
+            tCritics.forEach((k, v) -> {
+                critics.put(k, v);
+            });
 
-        movie = new Movie(m.getTitle(), m.getYear(), m.getPlot(), m.getDirectors(),
-                m.getGenres(), m.getCast(), m.getPoster(), critics, viewers, imdbVotes, imdbRating);
+            movie = new Movie(m.getTitle(), m.getYear(), m.getPlot(), m.getDirectors(),
+                    m.getGenres(), m.getCast(), m.getPoster(), critics, viewers, imdbVotes, imdbRating);
+        }
 
         try {
             Request req = new Request(movie, user);
